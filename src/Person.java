@@ -1,13 +1,13 @@
 import java.util.*;
 import java.io.*;
 
-public class Attribute
+public class Person
 {
     private File config = new File("config.txt");
     private HashMap<String,String> atts = new HashMap<>();
     private String name;
 
-    public Attribute(String name) throws IOException
+    public Person(String name) throws IOException
     {
         this.name = name;
 
@@ -29,15 +29,28 @@ public class Attribute
         }
     }
 
-    public String getName()
+    public String getPersonName()
     {
         return this.name;
     }
 
-    public String getValue(String attName)
+    public String getAttValue(String attName)
     {
-        String value = null;
-
+        String value = atts.get(attName);
         return value;
+    }
+
+    public void printAttributes()
+    {
+        Set set = atts.entrySet();
+        for (Object aSet : set) {
+            Map.Entry mentry = (Map.Entry) aSet;
+            System.out.println("key is: " + mentry.getKey() + " & Value is: " + mentry.getValue());
+        }
+    }
+
+    public void removeElement(String key)
+    {
+        atts.remove(key);
     }
 }
