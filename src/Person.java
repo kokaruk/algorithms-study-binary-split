@@ -62,7 +62,7 @@ public class Person
         }
     }
 
-    public void removeElement(String key)
+    public void removeAttribute(String key)
     {
         atts.remove(key);
     }
