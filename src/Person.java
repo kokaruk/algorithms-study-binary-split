@@ -13,19 +13,32 @@ public class Person
 
         try(Scanner input = new Scanner(config))
         {
-            while (input.nextLine().compareTo(name) != 0)               //Find the specified person
-            {
-                input.nextLine();
+            String line = " ";
+            int lineNumb = 0;
+
+            while (line.length() != 0)                                  //Skip attribute lines (The lines before meeting person's name)
+            {                                                           //And count the number of attributes per person
+                line = input.nextLine();
+
+                if(line.length() != 0)
+                    lineNumb++;
             }
 
-            input.nextLine();                                           //Skip the person's name
+            boolean foundName = false;
 
-            while(input.hasNext())
+            while (!foundName)                                          //Find the specified person
             {
+                if(input.next().compareTo(name) == 0) {
+                    foundName = true;
+                }
+            }
+
+           for(int i = 0; i < lineNumb; i++)                            //Adding the person attributes
+           {
                 String attName = input.next();                          //Read the name of attribute
                 String value = input.next();                            //Read the value of attribute
                 atts.put(attName,value);
-            }                                                           //End of adding the person attributes
+            }
         }
     }
 
@@ -45,7 +58,7 @@ public class Person
         Set set = atts.entrySet();
         for (Object aSet : set) {
             Map.Entry mentry = (Map.Entry) aSet;
-            System.out.println("key is: " + mentry.getKey() + " & Value is: " + mentry.getValue());
+            System.out.println("Key: " + mentry.getKey() + " \nVal: " + mentry.getValue());
         }
     }
 
