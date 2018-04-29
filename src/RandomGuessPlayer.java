@@ -164,6 +164,7 @@ public class RandomGuessPlayer implements Player
                 return false;
             }
         }
+
     } // end of receiveAnswer()
 
 } // end of class RandomGuessPlayer
