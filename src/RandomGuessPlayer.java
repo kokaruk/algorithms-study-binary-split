@@ -10,9 +10,9 @@ import java.util.*;
  */
 public class RandomGuessPlayer implements Player
 {
-    private ArrayList<Attributes> guessPossibility;                                             //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
+    private ArrayList<Attributes> guessPossibility;                          //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
     private Person chosen;
-    private ArrayList<String> people;
+    private ArrayList<Person> people;
     /**
      * Loads the game configuration from gameFilename, and also store the chosen
      * person.
@@ -52,7 +52,7 @@ public class RandomGuessPlayer implements Player
                 line = input.nextLine();
                 StringTokenizer st = new StringTokenizer(line);
                 if(st.countTokens() == 1)
-                    people.add(st.nextToken());
+                    people.add(new Person(st.nextToken()));
             }
 
         }
@@ -66,13 +66,16 @@ public class RandomGuessPlayer implements Player
         System.out.println("The guess range: ");
         for(Attributes a: guessPossibility)
             a.printValues();
-        for(String b: people)
-            System.out.println(b);
+        for(Person b: people)
+            System.out.println(b.getPersonName());
     }
 
     public Guess guess()
     {
         int randomType = 0 + (int)(Math.random() * ((1 - 0) + 1));                                      //if 0 = Attribute, 1 = Person
+
+        if(people.size() == 1)                                                                          //if there is only one person left to ask
+            return new Guess(Guess.GuessType.Person, "", people.get(0).getPersonName());
 
         if(randomType == 0)
         {
@@ -80,6 +83,13 @@ public class RandomGuessPlayer implements Player
             String value;
 
             int randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));
+
+            while(guessPossibility.get(randomAtt).getValues().size() == 0)
+            {
+                guessPossibility.remove(randomAtt);
+                randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));
+            }
+
             attName = guessPossibility.get(randomAtt).getName();
             value = guessPossibility.get(randomAtt).getRandomValue();
             return new Guess(Guess.GuessType.Attribute, attName, value);
@@ -89,23 +99,71 @@ public class RandomGuessPlayer implements Player
             String personName;
 
             int randomPerson = 0 + (int)(Math.random() * (((people.size()-1) - 0) + 1));
-            personName = people.get(randomPerson);
+            personName = people.get(randomPerson).getPersonName();
             return new Guess(Guess.GuessType.Person, "", personName);
         }
     } // end of guess()
 
 
-    public boolean answer(Guess currGuess) {
-
-        // placeholder, replace
-        return false;
+    public boolean answer(Guess currGuess)
+    {
+        if(currGuess.getType()== Guess.GuessType.Attribute) {
+            if(this.chosen.getAttValue(currGuess.getAttribute()).compareTo(currGuess.getValue()) == 0)
+                return true;
+            else
+                return false;
+        }
+        else {
+            if (this.chosen.getPersonName().compareTo(currGuess.getValue()) == 0)
+                return true;
+            else
+                return false;
+        }
     } // end of answer()
 
 
-	public boolean receiveAnswer(Guess currGuess, boolean answer) {
+	public boolean receiveAnswer(Guess currGuess, boolean answer)
+    {
+        if(currGuess.getType()== Guess.GuessType.Attribute)
+        {
+            if(answer)
+            {
+                for(int i = 0; i < people.size(); i++)
+                {
+                    /* If the answer for the current-guess attribute is correct, then eliminate people that do not have such attribute value */
 
-        // placeholder, replace
-        return true;
+                    if(currGuess.getValue().compareTo(people.get(i).getAttValue(currGuess.getAttribute())) != 0)
+                        people.remove(i);
+                    guessPossibility.remove(currGuess.getAttribute());
+                }
+                return false;
+            }
+            else    //wrong answer
+            {
+                for(int i = 0; i < people.size(); i++)
+                {
+                    /* If the answer for the current-guess attribute is wrong, then eliminate people that have such attribute value */
+
+                    if(currGuess.getValue().compareTo(people.get(i).getAttValue(currGuess.getAttribute())) == 0)
+                        people.remove(i);
+
+                    for(int j = 0; j < guessPossibility.size(); j++)
+                        if(guessPossibility.get(j).getName().compareTo(currGuess.getAttribute()) == 0)
+                            guessPossibility.get(j).removeAsked(currGuess.getValue());
+                }
+                return false;
+            }
+        }
+        else
+        {
+            if(answer)                                                                     //guessed the correct person
+                return true;
+            else
+            {
+                people.remove(currGuess.getValue());
+                return false;
+            }
+        }
     } // end of receiveAnswer()
 
 } // end of class RandomGuessPlayer

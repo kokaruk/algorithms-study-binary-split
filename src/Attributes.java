@@ -66,4 +66,9 @@ public class Attributes {
         for(String values: values)
             System.out.println("Value: " + values);
     }
+
+    public ArrayList<String> getValues()
+    {
+        return values;
+    }
 }

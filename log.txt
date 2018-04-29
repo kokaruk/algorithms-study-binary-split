@@ -1,6 +1,11 @@
 Round 1
-Player 1 guessing Person  Placeholder
+Player 1 guessing Person  P4
 Player 2 answering false
-Player 2 guessing Person  Placeholder
-Player 1 answering false
-It's a tie!
+Player 2 guessing Attribute glasses no
+Player 1 answering true
+Round 2
+Player 1 guessing Person  P2
+Player 2 answering false
+Player 2 guessing Person  P3
+Player 1 answering true
+Player 2 won!
