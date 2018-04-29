@@ -20,7 +20,7 @@ public class Person
             {                                                           //And count the number of attributes per person
                 line = input.nextLine();
 
-                if(line.length() != 0)
+                if(line.length() != 0)                                  //Found the end of attribute lines so the next line will be the person's name
                     lineNumb++;
             }
 
