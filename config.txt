@@ -1,119 +1,40 @@
-hairLength white yellow green red blue brown black
-glasses green yellow
-facialHair white yellow blue red
-eyeColor brown blue green
-pimples white yellow green red blue brown black
-hat white yellow green red blue brown black
+age 15 30 45 60 75
+gender male female
 hairColor white black brown red blue
-noseShape white yellow green red black
-faceShape white black green red blue brown
+eyeColor brown blue green
+glasses yes no
 
 P1
-hairLength blue
-glasses green
-facialHair white
+age 15
+gender male
+hairColor black
 eyeColor brown
-pimples brown
-hat blue
-hairColor white
-noseShape yellow
-faceShape white
+glasses no
 
 P2
-hairLength blue
-glasses green
-facialHair yellow
-eyeColor brown
-pimples blue
-hat white
+age 30
+gender female
 hairColor brown
-noseShape white
-faceShape red
+eyeColor blue
+glasses yes
 
 P3
-hairLength white
-glasses green
-facialHair blue
-eyeColor blue
-pimples blue
-hat red
+age 45
+gender  male
 hairColor red
-noseShape green
-faceShape white
+eyeColor green
+glasses no
 
 P4
-hairLength white
-glasses green
-facialHair white
-eyeColor blue
-pimples brown
-hat brown
-hairColor red
-noseShape green
-faceShape white
+age 60
+gender female
+hairColor blue
+eyeColor brown
+glasses yes
 
 P5
-hairLength yellow
-glasses green
-facialHair white
+age 75
+gender  male
+hairColor white
 eyeColor blue
-pimples blue
-hat brown
-hairColor brown
-noseShape white
-faceShape red
-
-P6
-hairLength white
-glasses green
-facialHair blue
-eyeColor blue
-pimples white
-hat green
-hairColor brown
-noseShape yellow
-faceShape white
-
-P7
-hairLength brown
-glasses green
-facialHair yellow
-eyeColor brown
-pimples red
-hat green
-hairColor brown
-noseShape white
-faceShape blue
-
-P8
-hairLength brown
-glasses green
-facialHair blue
-eyeColor blue
-pimples blue
-hat yellow
-hairColor brown
-noseShape white
-faceShape blue
-
-P9
-hairLength green
-glasses green
-facialHair blue
-eyeColor blue
-pimples white
-hat yellow
-hairColor brown
-noseShape white
-faceShape black
-
-P10
-hairLength yellow
-glasses green
-facialHair yellow
-eyeColor brown
-pimples brown
-hat brown
-hairColor brown
-noseShape green
-faceShape white
+glasses yes
