@@ -4,12 +4,14 @@ import java.util.*;
 public class Attributes {
     private String name;
     private ArrayList<String> values = new ArrayList<>();
-    private File config = new File("config.txt");
+    private File config;
 
-    public Attributes(String name) throws FileNotFoundException {                      //specify the name of attribute for each line in the attribute section
+    public Attributes(String name, String config) throws FileNotFoundException {                      //specify the name of attribute for each line in the attribute section
         this.name = name;
 
-        try(Scanner input = new Scanner(config))
+        this.config = new File(config);
+
+        try(Scanner input = new Scanner(this.config))
         {
             String checkName = " ";
 

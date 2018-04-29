@@ -28,7 +28,7 @@ public class RandomGuessPlayer implements Player
         throws IOException
     {
         File config = new File(gameFilename);
-        this.chosen = new Person(chosenName);
+        this.chosen = new Person(chosenName, gameFilename);
         this.guessPossibility = new ArrayList<>();
         this.people = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class RandomGuessPlayer implements Player
 
                 StringTokenizer st = new StringTokenizer(line);
                 String attName = st.nextToken();                                //e.g., gender, eyeColor, etc.
-                guessPossibility.add(new Attributes(attName));                  //e.g. gender male female
+                guessPossibility.add(new Attributes(attName, gameFilename));                  //e.g. gender male female
             }
 
             while (input.hasNextLine())                                         //read until the end of attribute section before meeting the person name
@@ -52,7 +52,7 @@ public class RandomGuessPlayer implements Player
                 line = input.nextLine();
                 StringTokenizer st = new StringTokenizer(line);
                 if(st.countTokens() == 1)
-                    people.add(new Person(st.nextToken()));
+                    people.add(new Person(st.nextToken(), gameFilename));
             }
 
         }

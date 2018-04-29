@@ -3,15 +3,17 @@ import java.io.*;
 
 public class Person
 {
-    private File config = new File("config.txt");
+    private File config;
     private HashMap<String,String> atts = new HashMap<>();
     private String name;
 
-    public Person(String name) throws IOException
+    public Person(String name, String config) throws IOException
     {
         this.name = name;
 
-        try(Scanner input = new Scanner(config))
+        this.config = new File(config);
+
+        try(Scanner input = new Scanner(this.config))
         {
             String line = " ";
             int lineNumb = 0;
