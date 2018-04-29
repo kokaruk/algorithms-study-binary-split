@@ -6,7 +6,7 @@ public class Attributes {
     private ArrayList<String> values = new ArrayList<>();
     private File config = new File("config.txt");
 
-    public Attributes(String name) throws FileNotFoundException {
+    public Attributes(String name) throws FileNotFoundException {                      //specify the name of attribute for each line in the attribute section
         this.name = name;
 
         try(Scanner input = new Scanner(config))
@@ -29,10 +29,7 @@ public class Attributes {
                         values.add(st.nextToken());
                     }
                 }
-
-
             }
-
         }
 
         Collections.sort(values);                                              //benefit for binary search
@@ -47,6 +44,15 @@ public class Attributes {
     {
         Random rand = new Random();
         return values.get(rand.nextInt(values.size()));
+    }
+
+    public String getValue(String value)
+    {
+        for(String v: values) {
+            if (v.compareTo(value) == 0)
+                return v;
+        }
+        return null;
     }
 
     public void removeAsked(String askedValue)

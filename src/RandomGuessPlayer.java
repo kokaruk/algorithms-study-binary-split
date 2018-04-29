@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 /**
  * Random guessing player.
@@ -9,7 +10,9 @@ import java.io.*;
  */
 public class RandomGuessPlayer implements Player
 {
-
+    private ArrayList<Attributes> guessPossibility;                                             //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
+    private Person chosen;
+    private ArrayList<String> people;
     /**
      * Loads the game configuration from gameFilename, and also store the chosen
      * person.
@@ -24,14 +27,71 @@ public class RandomGuessPlayer implements Player
     public RandomGuessPlayer(String gameFilename, String chosenName)
         throws IOException
     {
+        File config = new File(gameFilename);
+        this.chosen = new Person(chosenName);
+        this.guessPossibility = new ArrayList<>();
+        this.people = new ArrayList<>();
 
+        try(Scanner input = new Scanner(config))
+        {
+            String line = " ";
+            while (line.length() != 0)                                         //read until the end of attribute section before meeting the person name
+            {
+                line = input.nextLine();
+
+                if(line.length() == 0)
+                    break;
+
+                StringTokenizer st = new StringTokenizer(line);
+                String attName = st.nextToken();                                //e.g., gender, eyeColor, etc.
+                guessPossibility.add(new Attributes(attName));                  //e.g. gender male female
+            }
+
+            while (input.hasNextLine())                                         //read until the end of attribute section before meeting the person name
+            {
+                line = input.nextLine();
+                StringTokenizer st = new StringTokenizer(line);
+                if(st.countTokens() == 1)
+                    people.add(st.nextToken());
+            }
+
+        }
     } // end of RandomGuessPlayer()
 
+    public void print()
+    {
+        System.out.println("The chosen person: " + chosen.getPersonName());
+        chosen.printAttributes();
+        System.out.println();
+        System.out.println("The guess range: ");
+        for(Attributes a: guessPossibility)
+            a.printValues();
+        for(String b: people)
+            System.out.println(b);
+    }
 
-    public Guess guess() {
+    public Guess guess()
+    {
+        int randomType = 0 + (int)(Math.random() * ((1 - 0) + 1));                                      //if 0 = Attribute, 1 = Person
 
-        // placeholder, replace
-        return new Guess(Guess.GuessType.Person, "", "Placeholder");
+        if(randomType == 0)
+        {
+            String attName;
+            String value;
+
+            int randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));
+            attName = guessPossibility.get(randomAtt).getName();
+            value = guessPossibility.get(randomAtt).getRandomValue();
+            return new Guess(Guess.GuessType.Attribute, attName, value);
+        }
+        else
+        {
+            String personName;
+
+            int randomPerson = 0 + (int)(Math.random() * (((people.size()-1) - 0) + 1));
+            personName = people.get(randomPerson);
+            return new Guess(Guess.GuessType.Person, "", personName);
+        }
     } // end of guess()
 
 
