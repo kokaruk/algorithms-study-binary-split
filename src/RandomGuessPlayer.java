@@ -43,7 +43,7 @@ public class RandomGuessPlayer implements Player
                     break;
 
                 StringTokenizer st = new StringTokenizer(line);
-                String attName = st.nextToken();                                //e.g., gender, eyeColor, etc.
+                String attName = st.nextToken();                                                //e.g., gender, eyeColor, etc.
                 guessPossibility.add(new Attributes(attName, gameFilename));                  //e.g. gender male female
             }
 
@@ -58,7 +58,7 @@ public class RandomGuessPlayer implements Player
         }
     } // end of RandomGuessPlayer()
 
-    public void print()
+    public void print()                                                                          //this is just for manual testing
     {
         System.out.println("The chosen person: " + chosen.getPersonName());
         chosen.printAttributes();
@@ -82,12 +82,12 @@ public class RandomGuessPlayer implements Player
             String attName;
             String value;
 
-            int randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));
+            int randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));          //randomly pick attribute to ask e.g. eyeColor, glasses etc.
 
-            while(guessPossibility.get(randomAtt).getValues().size() == 0)
-            {
+            while(guessPossibility.get(randomAtt).getValues().size() == 0)                              //if the random function picks the attribute that is asked every of its value
+            {                                                                                           //remove such att because we don't want it to be asked anymore
                 guessPossibility.remove(randomAtt);
-                randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));
+                randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));         //re-randomly pick again
             }
 
             attName = guessPossibility.get(randomAtt).getName();
@@ -107,14 +107,14 @@ public class RandomGuessPlayer implements Player
 
     public boolean answer(Guess currGuess)
     {
-        if(currGuess.getType()== Guess.GuessType.Attribute) {
+        if(currGuess.getType()== Guess.GuessType.Attribute) {                                               //if the opponent asks about att and he's correct
             if(this.chosen.getAttValue(currGuess.getAttribute()).compareTo(currGuess.getValue()) == 0)
                 return true;
             else
                 return false;
         }
         else {
-            if (this.chosen.getPersonName().compareTo(currGuess.getValue()) == 0)
+            if (this.chosen.getPersonName().compareTo(currGuess.getValue()) == 0)                           //if the rival asks about person name and he's correct
                 return true;
             else
                 return false;
@@ -154,13 +154,13 @@ public class RandomGuessPlayer implements Player
                 return false;
             }
         }
-        else
+        else                                                                                //if this player asks about person name
         {
             if(answer)                                                                     //guessed the correct person
                 return true;
             else
             {
-                people.remove(currGuess.getValue());
+                people.remove(currGuess.getValue());                                        //remove the wrong person not to be ask again
                 return false;
             }
         }
