@@ -72,7 +72,8 @@ public class RandomGuessPlayer implements Player
 
     public Guess guess()
     {
-        int randomType = 0 + (int)(Math.random() * ((1 - 0) + 1));                                      //if 0 = Attribute, 1 = Person
+        Random myRandm = new Random();
+        int randomType = myRandm.nextInt(1);                                      //if 0 = Attribute, 1 = Person
 
         if(people.size() == 1)                                                                          //if there is only one person left to ask
             return new Guess(Guess.GuessType.Person, "", people.get(0).getPersonName());
@@ -82,12 +83,12 @@ public class RandomGuessPlayer implements Player
             String attName;
             String value;
 
-            int randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));          //randomly pick attribute to ask e.g. eyeColor, glasses etc.
+            int randomAtt = myRandm.nextInt(guessPossibility.size());          //randomly pick attribute to ask e.g. eyeColor, glasses etc.
 
             while(guessPossibility.get(randomAtt).getValues().size() == 0)                              //if the random function picks the attribute that is asked every of its value
             {                                                                                           //remove such att because we don't want it to be asked anymore
                 guessPossibility.remove(randomAtt);
-                randomAtt = 0 + (int)(Math.random() * (((guessPossibility.size()-1) - 0) + 1));         //re-randomly pick again
+                randomAtt = myRandm.nextInt(guessPossibility.size());        //re-randomly pick again
             }
 
             attName = guessPossibility.get(randomAtt).getName();
@@ -98,7 +99,7 @@ public class RandomGuessPlayer implements Player
         {
             String personName;
 
-            int randomPerson = 0 + (int)(Math.random() * (((people.size()-1) - 0) + 1));
+            int randomPerson = myRandm.nextInt(1);
             personName = people.get(randomPerson).getPersonName();
             return new Guess(Guess.GuessType.Person, "", personName);
         }
