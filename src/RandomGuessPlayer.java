@@ -94,6 +94,7 @@ public class RandomGuessPlayer implements Player
             attName = guessPossibility.get(randomAtt).getName();
             value = guessPossibility.get(randomAtt).getRandomValue();
             return new Guess(Guess.GuessType.Attribute, attName, value);
+
         }
         else
         {
