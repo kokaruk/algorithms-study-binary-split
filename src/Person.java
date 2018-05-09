@@ -55,15 +55,15 @@ public class Person
         return value;
     }
 
+    /**
+     *
+     */
     public void printAttributes()
     {
-        Set set = atts.entrySet();
-        for (Object aSet : set) {
-            Map.Entry mentry = (Map.Entry) aSet;
+        for (Map.Entry<String,String> mentry : atts.entrySet()) { // iterate amd print key vale pairs from attributes map
             System.out.println("Key: " + mentry.getKey() + " \nVal: " + mentry.getValue());
         }
     }
-
 
     public void removeAttribute(String key)
     {
