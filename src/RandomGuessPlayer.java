@@ -13,10 +13,10 @@ import java.util.StringTokenizer;
  * that this class implements the Player interface (directly or indirectly).
  */
 public class RandomGuessPlayer implements Player {
-    //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
-    private ArrayList<Attributes> possibleAttributesToGuess;
+
+    private ArrayList<Attributes> possibleAttributesToGuess;            //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
     private Person chosenPerson;
-    private ArrayList<Person> people;
+    private ArrayList<Person> people;                                   //All people in the game
 
     /**
      * Loads the game configuration from gameFilename, and also store the chosenPerson
@@ -38,19 +38,20 @@ public class RandomGuessPlayer implements Player {
 
         try (Scanner input = new Scanner(config)) {
             String line = " ";
-            while (line.length() != 0)                                         //read until the end of attribute section before meeting the person name
+            while (line.length() != 0)                                         //read until the end of attribute section before meeting the first person's name
+                                                                                //while storing each attribute and its values
             {
                 line = input.nextLine();
 
-                if (line.length() == 0)
+                if (line.length() == 0)                                        //meet the empty line which the next line will be P1 name
                     break;
 
                 StringTokenizer st = new StringTokenizer(line);
                 String attName = st.nextToken();                                                //e.g., gender, eyeColor, etc.
-                possibleAttributesToGuess.add(new Attributes(attName, gameFilename));                  //e.g. gender male female
+                possibleAttributesToGuess.add(new Attributes(attName, gameFilename));           //e.g. gender male female
             }
 
-            while (input.hasNextLine())                                         //read until the end of attribute section before meeting the person name
+            while (input.hasNextLine())                                         //storing a name and attributes for every person in the game in people ArrayList
             {
                 line = input.nextLine();
                 StringTokenizer st = new StringTokenizer(line);
@@ -59,7 +60,7 @@ public class RandomGuessPlayer implements Player {
             }
 
         }
-    } // end of RandomGuessPlayer()
+    } // end of RandomGuessPlayer() constructor
 
     public void print()                                                                          //this is just for manual testing
     {
@@ -75,28 +76,28 @@ public class RandomGuessPlayer implements Player {
 
     public Guess guess() {
         Random myRandm = new Random();
-        int randomType = myRandm.nextInt(1 + 1);                                      //if 0 = Attribute, 1 = Person
+        int randomType = myRandm.nextInt(1 + 1);                                      //if 0 the program will ask about Attribute, otherwise it will ask about Person's name
 
-        if (people.size() == 1)                                                                          //if there is only one person left to ask
+        if (people.size() == 1)                                                                          //if there is only one person left to ask, ask him/her
             return new Guess(Guess.GuessType.Person, "", people.get(0).getPersonName());
 
-        if (randomType == 0) {
+        if (randomType == 0) {                  //ask about attribute and a value
             String attName;
             String value;
 
             int randomAtt = myRandm.nextInt(possibleAttributesToGuess.size() );          //randomly pick attribute to ask e.g. eyeColor, glasses etc.
 
-            while (possibleAttributesToGuess.get(randomAtt).getValues().size() == 0)                              //if the random function picks the attribute that is asked every of its value
-            {                                                                                           //remove such att because we don't want it to be asked anymore
+            while (possibleAttributesToGuess.get(randomAtt).getValues().size() == 0)     //if the random function picks the attribute that is asked every of its value
+            {                                                                            //remove such att because we don't want it to be asked again
                 possibleAttributesToGuess.remove(randomAtt);
-                randomAtt = myRandm.nextInt(possibleAttributesToGuess.size() );        //re-randomly pick again
+                randomAtt = myRandm.nextInt(possibleAttributesToGuess.size() );        //re-randomly pick another attribute to ask again
             }
 
             attName = possibleAttributesToGuess.get(randomAtt).getName();
-            value = possibleAttributesToGuess.get(randomAtt).getRandomValue();
+            value = possibleAttributesToGuess.get(randomAtt).getRandomValue();          //randomly ask a value
             return new Guess(Guess.GuessType.Attribute, attName, value);
 
-        } else {
+        } else {                            //ask about a person's name
             String personName;
 
             int randomPerson = myRandm.nextInt(people.size() );
@@ -107,10 +108,10 @@ public class RandomGuessPlayer implements Player {
 
 
     public boolean answer(Guess currGuess) {
-        if (currGuess.getType() == Guess.GuessType.Attribute) {                                               //if the opponent asks about att and he's correct
+        if (currGuess.getType() == Guess.GuessType.Attribute) {                                               //if the opponent asks about att and he's correct, return true.
             return  (this.chosenPerson.getAttValue(currGuess.getAttribute()).compareTo(currGuess.getValue()) == 0);
         } else {
-            return  (this.chosenPerson.getPersonName().compareTo(currGuess.getValue()) == 0);                   //if the rival asks about person name and he's correct
+            return  (this.chosenPerson.getPersonName().compareTo(currGuess.getValue()) == 0);               //if the rival asks about person name and he's correct, return true.
         }
     } // end of answer()
 
@@ -142,10 +143,10 @@ public class RandomGuessPlayer implements Player {
             }
         } else                                                                                //if this player asks about person name
         {
-            if (answer)                                                                     //guessed the correct person
+            if (answer)                                                                     //guessed the correct person, the game is ended.
                 return true;
             else {
-                people.remove(currGuess.getValue());                                        //remove the wrong person not to be ask again
+                people.remove(currGuess.getValue());                                        //remove the wrong person not to be asked again
                 return false;
             }
         }
