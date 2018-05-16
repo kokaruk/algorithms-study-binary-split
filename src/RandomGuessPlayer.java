@@ -1,9 +1,6 @@
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 /**
  * Random guessing player.
@@ -14,9 +11,15 @@ import java.util.StringTokenizer;
  */
 public class RandomGuessPlayer implements Player {
 
-    private ArrayList<Attributes> possibleAttributesToGuess;            //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
-    private Person chosenPerson;
-    private ArrayList<Person> people;                                   //All people in the game
+    // map of AttributeName, List of Attribute Values
+    //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
+    private Map<String, List<String>> possibleAttributesToGuess;
+    // map of Person Name as Key and Map of Attribute and Value pairs
+    //All people in the game
+    private Map<String, Map<String, String>> guessCards;
+    //
+    private String chosenName;
+
 
     /**
      * Loads the game configuration from gameFilename, and also store the chosenPerson
@@ -31,126 +34,91 @@ public class RandomGuessPlayer implements Player {
      */
     public RandomGuessPlayer(String gameFilename, String chosenName)
             throws IOException {
-        File config = new File(gameFilename);
-        this.chosenPerson = new Person(chosenName, gameFilename);
-        this.possibleAttributesToGuess = new ArrayList<>();
-        this.people = new ArrayList<>();
-
-        try (Scanner input = new Scanner(config)) {
-            String line = " ";
-            while (line.length() != 0)                                         //read until the end of attribute section before meeting the first person's name
-                                                                                //while storing each attribute and its values
-            {
-                line = input.nextLine();
-
-                if (line.length() == 0)                                        //meet the empty line which the next line will be P1 name
-                    break;
-
-                StringTokenizer st = new StringTokenizer(line);
-                String attName = st.nextToken();                                                //e.g., gender, eyeColor, etc.
-                possibleAttributesToGuess.add(new Attributes(attName, gameFilename));           //e.g. gender male female
-            }
-
-            while (input.hasNextLine())                                         //storing a name and attributes for every person in the game in people ArrayList
-            {
-                line = input.nextLine();
-                StringTokenizer st = new StringTokenizer(line);
-                if (st.countTokens() == 1)
-                    people.add(new Person(st.nextToken(), gameFilename));
-            }
-
-        }
+        this.chosenName = chosenName;
+        DataLoader dataLoader = DataLoader.getInstance(gameFilename);
+        possibleAttributesToGuess = new HashMap<>(dataLoader.getAttributes());
+        guessCards = new HashMap<>(dataLoader.getGuessCards());
     } // end of RandomGuessPlayer() constructor
 
-    public void print()                                                                          //this is just for manual testing
-    {
-        System.out.println("The chosenPerson person: " + chosenPerson.getPersonName());
-        chosenPerson.printAttributes();
-        System.out.println();
-        System.out.println("The guess range: ");
-        for (Attributes a : possibleAttributesToGuess)
-            a.printValues();
-        for (Person b : people)
-            System.out.println(b.getPersonName());
-    }
-
     public Guess guess() {
-        Random myRandm = new Random();
-        int randomType = myRandm.nextInt(1 + 1);                                      //if 0 the program will ask about Attribute, otherwise it will ask about Person's name
+        if (guessCards.size() == 1) //if there is only one card left to ask, ask it
+            return new Guess(Guess.GuessType.Person, "", guessCards.entrySet().iterator().next().getKey());
 
-        if (people.size() == 1)                                                                          //if there is only one person left to ask, ask him/her
-            return new Guess(Guess.GuessType.Person, "", people.get(0).getPersonName());
+        Random myRandom = new Random(); // new random
 
-        if (randomType == 0) {                  //ask about attribute and a value
-            String attName;
-            String value;
+        // new random guess type
+        Guess.GuessType guessType = Guess.GuessType.values()[myRandom.nextInt(Guess.GuessType.values().length)];
 
-            int randomAtt = myRandm.nextInt(possibleAttributesToGuess.size() );          //randomly pick attribute to ask e.g. eyeColor, glasses etc.
+        if (guessType == Guess.GuessType.Attribute) {                  //ask about attribute and a value
+            // get array of attribute names from map
+            String[] attributeNames = possibleAttributesToGuess.keySet().toArray(new String[0]);
 
-            while (possibleAttributesToGuess.get(randomAtt).getValues().size() == 0)     //if the random function picks the attribute that is asked every of its value
-            {                                                                            //remove such att because we don't want it to be asked again
-                possibleAttributesToGuess.remove(randomAtt);
-                randomAtt = myRandm.nextInt(possibleAttributesToGuess.size() );        //re-randomly pick another attribute to ask again
+            //randomly pick attribute to ask e.g. eyeColor, glasses etc.
+            String randomAttributeName = attributeNames[myRandom.nextInt(attributeNames.length)];      // random attribute name
+            // needs to be a new array list, as map holds abstract list which doesn't support remove operation
+            List<String> attributeValues = new ArrayList<>(possibleAttributesToGuess.get(randomAttributeName));
+            String attributeValue = attributeValues.get(myRandom.nextInt(attributeValues.size())); //randomly pick a value
+            attributeValues.remove(myRandom.nextInt(attributeValues.size()));
+            if (attributeValues.isEmpty()) { //if list of values becomes empty
+                possibleAttributesToGuess.remove(randomAttributeName); // remove this attribute from attributes list
+            } else {
+                possibleAttributesToGuess.replace(randomAttributeName, attributeValues);
             }
+            return new Guess(guessType, randomAttributeName, attributeValue);
 
-            attName = possibleAttributesToGuess.get(randomAtt).getName();
-            value = possibleAttributesToGuess.get(randomAtt).getRandomValue();          //randomly ask a value
-            return new Guess(Guess.GuessType.Attribute, attName, value);
-
-        } else {                            //ask about a person's name
-            String personName;
-
-            int randomPerson = myRandm.nextInt(people.size() );
-            personName = people.get(randomPerson).getPersonName();
-            return new Guess(Guess.GuessType.Person, "", personName);
+        } else {  //ask about a person's name
+            String cardName;
+            String[] cardNames = guessCards.keySet().toArray(new String[0]); // get card names from cards map
+            cardName = cardNames[myRandom.nextInt(cardNames.length)];
+            guessCards.remove(cardName); // remove card from collection
+            return new Guess(Guess.GuessType.Person, "", cardName);
         }
     } // end of guess()
 
-
     public boolean answer(Guess currGuess) {
-        if (currGuess.getType() == Guess.GuessType.Attribute) {                                               //if the opponent asks about att and he's correct, return true.
-            return  (this.chosenPerson.getAttValue(currGuess.getAttribute()).compareTo(currGuess.getValue()) == 0);
-        } else {
-            return  (this.chosenPerson.getPersonName().compareTo(currGuess.getValue()) == 0);               //if the rival asks about person name and he's correct, return true.
+        try {
+            boolean bool = currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
+                    guessCards.get(chosenName).get(currGuess.getAttribute()).equals(currGuess.getValue())
+                    : chosenName.equals(currGuess.getValue()); //if the rival asks about person name
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+
+        return currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
+                guessCards.get(chosenName).get(currGuess.getAttribute()).equals(currGuess.getValue())
+                : chosenName.equals(currGuess.getValue()); //if the rival asks about person name
     } // end of answer()
 
 
-    public boolean receiveAnswer(Guess currGuess, boolean answer) {
-        if (currGuess.getType() == Guess.GuessType.Attribute) {
-            if (answer) {
-                for (int i = 0; i < people.size(); i++) {
-                    /* If the answer for the current-guess attribute is correct, then eliminate people that do not have such attribute value */
-
-                    if (currGuess.getValue().compareTo(people.get(i).getAttValue(currGuess.getAttribute())) != 0)
-                        people.remove(i);
-                    possibleAttributesToGuess.remove(currGuess.getAttribute());
+    public boolean receiveAnswer(Guess currGuess, boolean answer) {  //////   have I finished?
+        if (currGuess.getType() == Guess.GuessType.Attribute) { // if was guessing attribute
+            Set<String> cardsToBeRemoved = new HashSet<>();
+            for (Map.Entry<String, Map<String,String>> guessCard : guessCards.entrySet()) {
+                /*
+                eliminate all cards that don't have this attribute value
+                if answer true and guess value doesn't equal to attribute value,
+                 */
+                if( answer && !guessCard.getValue().get(currGuess.getAttribute()).equals(currGuess.getValue()) ){
+                    cardsToBeRemoved.add(guessCard.getKey());
                 }
-                return false;
-            } else    //wrong answer
-            {
-                for (int i = 0; i < people.size(); i++) {
-                    /* If the answer for the current-guess attribute is wrong, then eliminate people that have such attribute value */
-
-                    if (currGuess.getValue().compareTo(people.get(i).getAttValue(currGuess.getAttribute())) == 0)
-                        people.remove(i);
-
-                    for ( Attributes attribute : possibleAttributesToGuess)
-                        if (attribute.getName().compareTo(currGuess.getAttribute()) == 0)
-                            attribute.removeAsked(currGuess.getValue());
+                /*
+                eliminate cards that have such attribute value
+                if answer false and value doesn't equal to attribute value
+                 */
+                if(!answer && guessCard.getValue().get(currGuess.getAttribute()).equals(currGuess.getValue())){
+                    cardsToBeRemoved.add(guessCard.getKey());
                 }
-                return false;
+
             }
-        } else                                                                                //if this player asks about person name
-        {
+            guessCards.keySet().removeAll(cardsToBeRemoved);
+        } else {  //if this player asks about person name
             if (answer)                                                                     //guessed the correct person, the game is ended.
                 return true;
             else {
-                people.remove(currGuess.getValue());                                        //remove the wrong person not to be asked again
-                return false;
+                guessCards.remove(currGuess.getValue());                                        //remove the wrong person not to be asked again
             }
         }
-
+        return false;
     } // end of receiveAnswer()
 
 } // end of class RandomGuessPlayer

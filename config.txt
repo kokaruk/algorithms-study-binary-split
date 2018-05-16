@@ -1,40 +1,298 @@
-age 15 30 45 60 75
-gender male female
-hairColor white black brown red blue
-eyeColor brown blue green
+hairLength bald short medium long
 glasses yes no
+facialHair nohair some beard mustache goatee
+eyeColor brown blue green
+pimples nopimples some alot
+hat akubra balmoral beanie
+hairColor white black brown red blue
+noseShape TurnedUp Roman Hawk Greek Nubian
+faceShape Round Square Oblong
+gender male female
 
 P1
-age 15
-gender male
-hairColor black
-eyeColor brown
-glasses no
+hairLength bald
+glasses yes
+facialHair nohair
+eyeColor blue
+pimples nopimples
+hat beanie
+hairColor white
+noseShape Greek
+faceShape Round
+gender female
 
 P2
-age 30
-gender female
-hairColor brown
-eyeColor blue
+hairLength short
 glasses yes
+facialHair some
+eyeColor green
+pimples some
+hat balmoral
+hairColor black
+noseShape Hawk
+faceShape Square
+gender male
 
 P3
-age 45
-gender  male
-hairColor red
-eyeColor green
-glasses no
+hairLength medium
+glasses yes
+facialHair nohair
+eyeColor brown
+pimples alot
+hat akubra
+hairColor brown
+noseShape Roman
+faceShape Oblong
+gender female
 
 P4
-age 60
-gender female
-hairColor blue
-eyeColor brown
+hairLength long
 glasses yes
+facialHair beard
+eyeColor blue
+pimples nopimples
+hat beanie
+hairColor red
+noseShape TurnedUp
+faceShape Round
+gender male
 
 P5
-age 75
-gender  male
-hairColor white
-eyeColor blue
+hairLength bald
 glasses yes
+facialHair nohair
+eyeColor green
+pimples some
+hat balmoral
+hairColor blue
+noseShape Nubian
+faceShape Square
+gender female
+
+P6
+hairLength short
+glasses yes
+facialHair mustache
+eyeColor brown
+pimples alot
+hat akubra
+hairColor white
+noseShape Greek
+faceShape Oblong
+gender male
+
+P7
+hairLength medium
+glasses yes
+facialHair nohair
+eyeColor blue
+pimples nopimples
+hat beanie
+hairColor black
+noseShape Hawk
+faceShape Round
+gender female
+
+P8
+hairLength long
+glasses yes
+facialHair goatee
+eyeColor green
+pimples some
+hat balmoral
+hairColor brown
+noseShape Roman
+faceShape Square
+gender male
+
+P9
+hairLength bald
+glasses yes
+facialHair nohair
+eyeColor brown
+pimples some
+hat akubra
+hairColor red
+noseShape TurnedUp
+faceShape Oblong
+gender female
+
+P10
+hairLength short
+glasses yes
+facialHair nohair
+eyeColor blue
+pimples alot
+hat beanie
+hairColor blue
+noseShape Nubian
+faceShape Round
+gender male
+
+P11
+hairLength medium
+glasses yes
+facialHair nohair
+eyeColor green
+pimples nopimples
+hat balmoral
+hairColor white
+noseShape Greek
+faceShape Square
+gender female
+
+P12
+hairLength long
+glasses yes
+facialHair nohair
+eyeColor brown
+pimples some
+hat akubra
+hairColor black
+noseShape Hawk
+faceShape Oblong
+gender female
+
+P13
+hairLength bald
+glasses no
+facialHair nohair
+eyeColor blue
+pimples alot
+hat beanie
+hairColor brown
+noseShape Roman
+faceShape Round
+gender male
+
+P14
+hairLength short
+glasses no
+facialHair nohair
+eyeColor green
+pimples nopimples
+hat balmoral
+hairColor red
+noseShape TurnedUp
+faceShape Square
+gender female
+
+P15
+hairLength medium
+glasses no
+facialHair some
+eyeColor brown
+pimples some
+hat akubra
+hairColor blue
+noseShape Nubian
+faceShape Round
+gender male
+
+P16
+hairLength long
+glasses no
+facialHair nohair
+eyeColor blue
+pimples alot
+hat beanie
+hairColor white
+noseShape Greek
+faceShape Square
+gender female
+
+P17
+hairLength bald
+glasses no
+facialHair beard
+eyeColor green
+pimples nopimples
+hat balmoral
+hairColor black
+noseShape Hawk
+faceShape Oblong
+gender male
+
+P18
+hairLength short
+glasses no
+facialHair nohair
+eyeColor brown
+pimples some
+hat akubra
+hairColor brown
+noseShape Roman
+faceShape Round
+gender female
+
+P19
+hairLength medium
+glasses no
+facialHair nohair
+eyeColor blue
+pimples alot
+hat beanie
+hairColor red
+noseShape TurnedUp
+faceShape Oblong
+gender male
+
+P20
+hairLength long
+glasses no
+facialHair nohair
+eyeColor green
+pimples nopimples
+hat balmoral
+hairColor blue
+noseShape Nubian
+faceShape Round
+gender female
+
+P21
+hairLength bald
+glasses no
+facialHair some
+eyeColor green
+pimples nopimples
+hat akubra
+hairColor white
+noseShape Greek
+faceShape Square
+gender male
+
+P22
+hairLength short
+glasses no
+facialHair nohair
+eyeColor brown
+pimples some
+hat balmoral
+hairColor black
+noseShape Hawk
+faceShape Oblong
+gender female
+
+P23
+hairLength medium
+glasses no
+facialHair beard
+eyeColor blue
+pimples alot
+hat akubra
+hairColor brown
+noseShape Roman
+faceShape Round
+gender male
+
+P24
+hairLength long
+glasses no
+facialHair beard
+eyeColor green
+pimples nopimples
+hat beanie
+hairColor red
+noseShape TurnedUp
+faceShape Square
+gender female
