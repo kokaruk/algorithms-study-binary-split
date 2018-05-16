@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Binary-search based guessing player.
@@ -7,10 +7,8 @@ import java.io.*;
  * You may implement/extend other interfaces or classes, but ensure ultimately
  * that this class implements the Player interface (directly or indirectly).
  */
-public class BinaryGuessPlayer implements Player
-{
-
-    /**
+public class BinaryGuessPlayer extends AbstractPlayer implements Player {
+     /**
      * Loads the game configuration from gameFilename, and also store the chosen
      * person.
      *
@@ -22,31 +20,28 @@ public class BinaryGuessPlayer implements Player
      *    implementation exits gracefully if an IOException is thrown.
      */
     public BinaryGuessPlayer(String gameFilename, String chosenName)
-        throws IOException
-    {
-        DataLoader dataLoader = DataLoader.getInstance(gameFilename);
-
+        throws IOException {
+        super(gameFilename, chosenName);
     } // end of BinaryGuessPlayer()
 
 
     public Guess guess() {
-
-        // placeholder, replace
-        return new Guess(Guess.GuessType.Person, "", "Placeholder");
+        if (guessCards.size() == 1) {//if there is only one card left to ask, ask it
+            return new Guess(Guess.GuessType.Person, "", guessCards.entrySet().iterator().next().getKey());
+        } else {
+            // init priority queue
+        //    Queue<>
+            return new Guess(Guess.GuessType.Person, "", "Placeholder");
+        }
     } // end of guess()
 
+    /**
+     * inner class to store attributes
+     * @param <T> Attribute Name, Attribute Value
+     * @param <U> Counter of Attribute Name, Value occurrences
+     */
+    class TupleAttributes<T extends String, U extends Integer>{
 
-	public boolean answer(Guess currGuess) {
-
-        // placeholder, replace
-        return false;
-    } // end of answer()
-
-
-	public boolean receiveAnswer(Guess currGuess, boolean answer) {
-
-        // placeholder, replace
-        return true;
-    } // end of receiveAnswer()
+    }
 
 } // end of class BinaryGuessPlayer

@@ -1,6 +1,7 @@
 import java.io.IOException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Random guessing player.
@@ -9,17 +10,7 @@ import java.util.*;
  * You may implement/extend other interfaces or classes, but ensure ultimately
  * that this class implements the Player interface (directly or indirectly).
  */
-public class RandomGuessPlayer implements Player {
-
-    // map of AttributeName, List of Attribute Values
-    //The range of attributes that a player can guess, e.g, gender, eyeColor, etc.
-    private Map<String, List<String>> possibleAttributesToGuess;
-    // map of Person Name as Key and Map of Attribute and Value pairs
-    //All people in the game
-    private Map<String, Map<String, String>> guessCards;
-    //
-    private Map<String, Map<String, String>> chosenCard;
-
+public class RandomGuessPlayer extends AbstractPlayer implements Player {
 
     /**
      * Loads the game configuration from gameFilename, and also store the chosenPerson
@@ -34,16 +25,11 @@ public class RandomGuessPlayer implements Player {
      */
     public RandomGuessPlayer(String gameFilename, String chosenName)
             throws IOException {
-        DataLoader dataLoader = DataLoader.getInstance(gameFilename);
-        possibleAttributesToGuess = new LinkedHashMap<>(dataLoader.getAttributes());
-        guessCards = new LinkedHashMap<>(dataLoader.getGuessCards());
-        this.chosenCard = new HashMap<>();
-        chosenCard.put(chosenName, new HashMap<>(guessCards.get(chosenName)));
-
+        super(gameFilename, chosenName);
     } // end of RandomGuessPlayer() constructor
 
     public Guess guess() {
-        if (guessCards.size() == 1) //if there is only one card left to ask, ask it
+        if (guessCards.size() == 1) //if there is only one card left, ask it
             return new Guess(Guess.GuessType.Person, "", guessCards.entrySet().iterator().next().getKey());
 
         Random myRandom = new Random(); // new random
@@ -51,7 +37,7 @@ public class RandomGuessPlayer implements Player {
         // new random guess type
         Guess.GuessType guessType = Guess.GuessType.values()[myRandom.nextInt(Guess.GuessType.values().length)];
 
-        if (guessType == Guess.GuessType.Attribute) {                  //ask about attribute and a value
+        if (guessType == Guess.GuessType.Attribute) {           //ask about attribute and a value
             // get array of attribute names from map
             String[] attributeNames = possibleAttributesToGuess.keySet().toArray(new String[0]);
 
@@ -71,43 +57,8 @@ public class RandomGuessPlayer implements Player {
             String cardName;
             String[] cardNames = guessCards.keySet().toArray(new String[0]); // get card names from cards map
             cardName = cardNames[myRandom.nextInt(cardNames.length)];
-            guessCards.remove(cardName); // remove card from collection
             return new Guess(Guess.GuessType.Person, "", cardName);
         }
     } // end of guess()
-
-    public boolean answer(Guess currGuess) {
-            return currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
-                    chosenCard.entrySet().iterator().next().getValue().get(currGuess.getAttribute()).equals(currGuess.getValue())
-                    : chosenCard.containsKey(currGuess.getValue()); //if the rival asks about person name
-    } // end of answer()
-
-
-    public boolean receiveAnswer(Guess currGuess, boolean answer) {  //////   have I finished?
-        if (currGuess.getType() == Guess.GuessType.Attribute) { // if was guessing attribute
-            Set<String> cardsToBeRemoved = new HashSet<>();
-            for (Map.Entry<String, Map<String,String>> guessCard : guessCards.entrySet()) {
-                /*
-                eliminate all cards that don't have this attribute value
-                if answer true and guess value doesn't equal to attribute value,
-                 */
-                if( answer && !guessCard.getValue().get(currGuess.getAttribute()).equals(currGuess.getValue()) ){
-                    cardsToBeRemoved.add(guessCard.getKey());
-                }
-                /*
-                eliminate cards that have such attribute value
-                if answer false and value doesn't equal to attribute value
-                 */
-                if(!answer && guessCard.getValue().get(currGuess.getAttribute()).equals(currGuess.getValue())){
-                    cardsToBeRemoved.add(guessCard.getKey());
-                }
-
-            }
-            guessCards.keySet().removeAll(cardsToBeRemoved);
-            return false;
-        } else {  //if this player asks about person name
-            return answer;                                                                    //guessed the correct person, the game is ended.
-        }
-    } // end of receiveAnswer()
 
 } // end of class RandomGuessPlayer
