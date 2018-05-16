@@ -36,8 +36,8 @@ public class RandomGuessPlayer implements Player {
             throws IOException {
         this.chosenName = chosenName;
         DataLoader dataLoader = DataLoader.getInstance(gameFilename);
-        possibleAttributesToGuess = new HashMap<>(dataLoader.getAttributes());
-        guessCards = new HashMap<>(dataLoader.getGuessCards());
+        possibleAttributesToGuess = new LinkedHashMap<>(dataLoader.getAttributes());
+        guessCards = new LinkedHashMap<>(dataLoader.getGuessCards());
     } // end of RandomGuessPlayer() constructor
 
     public Guess guess() {
@@ -111,14 +111,10 @@ public class RandomGuessPlayer implements Player {
 
             }
             guessCards.keySet().removeAll(cardsToBeRemoved);
+            return false;
         } else {  //if this player asks about person name
-            if (answer)                                                                     //guessed the correct person, the game is ended.
-                return true;
-            else {
-                guessCards.remove(currGuess.getValue());                                        //remove the wrong person not to be asked again
-            }
+            return answer;                                                                    //guessed the correct person, the game is ended.
         }
-        return false;
     } // end of receiveAnswer()
 
 } // end of class RandomGuessPlayer
