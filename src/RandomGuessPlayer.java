@@ -18,7 +18,7 @@ public class RandomGuessPlayer implements Player {
     //All people in the game
     private Map<String, Map<String, String>> guessCards;
     //
-    private String chosenName;
+    private Map<String, Map<String, String>> chosenCard;
 
 
     /**
@@ -34,10 +34,12 @@ public class RandomGuessPlayer implements Player {
      */
     public RandomGuessPlayer(String gameFilename, String chosenName)
             throws IOException {
-        this.chosenName = chosenName;
         DataLoader dataLoader = DataLoader.getInstance(gameFilename);
         possibleAttributesToGuess = new LinkedHashMap<>(dataLoader.getAttributes());
         guessCards = new LinkedHashMap<>(dataLoader.getGuessCards());
+        this.chosenCard = new HashMap<>();
+        chosenCard.put(chosenName, new HashMap<>(guessCards.get(chosenName)));
+
     } // end of RandomGuessPlayer() constructor
 
     public Guess guess() {
@@ -57,8 +59,7 @@ public class RandomGuessPlayer implements Player {
             String randomAttributeName = attributeNames[myRandom.nextInt(attributeNames.length)];      // random attribute name
             // needs to be a new array list, as map holds abstract list which doesn't support remove operation
             List<String> attributeValues = new ArrayList<>(possibleAttributesToGuess.get(randomAttributeName));
-            String attributeValue = attributeValues.get(myRandom.nextInt(attributeValues.size())); //randomly pick a value
-            attributeValues.remove(myRandom.nextInt(attributeValues.size()));
+            String attributeValue = attributeValues.remove(myRandom.nextInt(attributeValues.size())); //randomly pick a value
             if (attributeValues.isEmpty()) { //if list of values becomes empty
                 possibleAttributesToGuess.remove(randomAttributeName); // remove this attribute from attributes list
             } else {
@@ -76,17 +77,9 @@ public class RandomGuessPlayer implements Player {
     } // end of guess()
 
     public boolean answer(Guess currGuess) {
-        try {
-            boolean bool = currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
-                    guessCards.get(chosenName).get(currGuess.getAttribute()).equals(currGuess.getValue())
-                    : chosenName.equals(currGuess.getValue()); //if the rival asks about person name
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
-                guessCards.get(chosenName).get(currGuess.getAttribute()).equals(currGuess.getValue())
-                : chosenName.equals(currGuess.getValue()); //if the rival asks about person name
+            return currGuess.getType() == Guess.GuessType.Attribute ? //if the opponent asks about att
+                    chosenCard.entrySet().iterator().next().getValue().get(currGuess.getAttribute()).equals(currGuess.getValue())
+                    : chosenCard.containsKey(currGuess.getValue()); //if the rival asks about person name
     } // end of answer()
 
 
