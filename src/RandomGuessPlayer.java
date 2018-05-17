@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Random guessing player.
@@ -29,9 +27,9 @@ public class RandomGuessPlayer extends AbstractPlayer implements Player {
     } // end of RandomGuessPlayer() constructor
 
     public Guess guess() {
-        if (guessCards.size() == 1) //if there is only one card left, ask it
+        if (guessCards.size() == 1) { //if there is only one card left, ask it
             return new Guess(Guess.GuessType.Person, "", guessCards.entrySet().iterator().next().getKey());
-
+        }
         Random myRandom = new Random(); // new random
 
         // new random guess type
@@ -40,12 +38,12 @@ public class RandomGuessPlayer extends AbstractPlayer implements Player {
         if (guessType == Guess.GuessType.Attribute) {           //ask about attribute and a value
             // get array of attribute names from map
             String[] attributeNames = possibleAttributesToGuess.keySet().toArray(new String[0]);
-
             //randomly pick attribute to ask e.g. eyeColor, glasses etc.
             String randomAttributeName = attributeNames[myRandom.nextInt(attributeNames.length)];      // random attribute name
             // needs to be a new array list, as map holds abstract list which doesn't support remove operation
             List<String> attributeValues = new ArrayList<>(possibleAttributesToGuess.get(randomAttributeName));
             String attributeValue = attributeValues.remove(myRandom.nextInt(attributeValues.size())); //randomly pick a value
+            /////////// remove this attribute from collection of attributes
             if (attributeValues.isEmpty()) { //if list of values becomes empty
                 possibleAttributesToGuess.remove(randomAttributeName); // remove this attribute from attributes list
             } else {
@@ -57,6 +55,9 @@ public class RandomGuessPlayer extends AbstractPlayer implements Player {
             String cardName;
             String[] cardNames = guessCards.keySet().toArray(new String[0]); // get card names from cards map
             cardName = cardNames[myRandom.nextInt(cardNames.length)];
+
+            reduceRedundantAttributeValues(cardName);
+
             return new Guess(Guess.GuessType.Person, "", cardName);
         }
     } // end of guess()

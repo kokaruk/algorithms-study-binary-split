@@ -27,8 +27,8 @@ class DataLoader {
 
     // private constructor
     private DataLoader() throws IOException {
-        attributes = new LinkedHashMap<>();
-        guessCards = new LinkedHashMap<>();
+        attributes = new HashMap<>();
+        guessCards = new HashMap<>();
         loadData();
     }
 
@@ -88,7 +88,7 @@ class DataLoader {
      */
     private void initGuessCards(LinkedList<String> lines) {
         String name = lines.remove();
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, String> attributes = new HashMap<>();
         String line;
         while (!lines.isEmpty() && (line = lines.remove()).length() != 0) {
             String[] attributesPair = line.split(" ");

@@ -22,8 +22,8 @@ abstract public class AbstractPlayer implements Player {
 
     public AbstractPlayer(String gameFilename, String chosenName) throws IOException {
         DataLoader dataLoader = DataLoader.getInstance(gameFilename);
-        possibleAttributesToGuess = new LinkedHashMap<>(dataLoader.getAttributes());
-        guessCards = new LinkedHashMap<>(dataLoader.getGuessCards());
+        possibleAttributesToGuess = new HashMap<>(dataLoader.getAttributes());
+        guessCards = new HashMap<>(dataLoader.getGuessCards());
         this.chosenCard = new HashMap<>();
         chosenCard.put(chosenName, new HashMap<>(guessCards.get(chosenName)));
     }
@@ -52,40 +52,41 @@ abstract public class AbstractPlayer implements Player {
                     cardsToBeRemoved.add(guessCard.getKey());
                 }
             }
-            guessCards.keySet().removeAll(cardsToBeRemoved);
+             // guessCards.keySet().removeAll(cardsToBeRemoved);
+            for(String cardName : cardsToBeRemoved){
+                reduceRedundantAttributeValues(cardName);
+            }
             return false;
         } else {  //if this player asks about person name
-            if (answer) {
-                return true;    //guessed the correct person, the game is ended.
-            } else {
-                // check for redundant attribute,value pairs as this card can be the las of kind but
-                // attributes to guess still may contain it
-                Map<String, String> guessingCardAttributes = new HashMap<>(guessCards.get(currGuess.getValue()));
-                guessCards.remove(currGuess.getValue()); // remove card from collection
+                return answer;    //guessed the correct person, the game is ended.
+        }
+    } // end of receiveAnswer()
 
-                // iterate over attributes
-                for (Map.Entry<String, String> attributeValue : guessingCardAttributes.entrySet()) {
-                    boolean attribPresentInCollection = false;
-                    // iterate over cards
-                    for (Map.Entry<String, Map<String, String>> card : guessCards.entrySet()) {
-                        // if cars attribute : value present in collection, exit loop
-                        attribPresentInCollection = card.getValue().get(attributeValue.getKey()).equals(attributeValue.getValue());
-                        if (attribPresentInCollection) break;
-                    }
-                    if (!attribPresentInCollection) { // if this attribute value no longer in use
-                        List<String> attributeValues = new ArrayList<>(possibleAttributesToGuess.get(attributeValue.getKey()));
-                        attributeValues.remove(attributeValue.getValue());
-                        if (attributeValues.isEmpty()) { //if list of values becomes empty
-                            possibleAttributesToGuess.remove(attributeValue.getKey()); // remove this attribute from attributes list
-                        } else {
-                            possibleAttributesToGuess.replace(attributeValue.getKey(), attributeValues);
-                        }
-                    }
+    void reduceRedundantAttributeValues(String cardName){
+        // check for redundant attribute,value pairs as this card can be the las of attribute value
+        // but attributes collection to guess still may contain it
+        Map<String, String> guessingCardAttributes = new HashMap<>(guessCards.get(cardName));
+        guessCards.remove(cardName); // remove card from collection
+
+        // iterate over attributes
+        for (Map.Entry<String, String> attributeValue : guessingCardAttributes.entrySet()) {
+            boolean attribPresentInCollection = false;
+            // iterate over cards
+            for (Map.Entry<String, Map<String, String>> card : guessCards.entrySet()) {
+                // if cards attribute : value still present in cards collection, exit loop
+                attribPresentInCollection = card.getValue().get(attributeValue.getKey()).equals(attributeValue.getValue());
+                if (attribPresentInCollection) break;
+            }
+            if (!attribPresentInCollection) { // if this attribute value no longer in use, remove it from collection
+                List<String> attributeValues = new ArrayList<>(possibleAttributesToGuess.get(attributeValue.getKey()));
+                attributeValues.remove(attributeValue.getValue());
+                if (attributeValues.isEmpty()) { //if list of values becomes empty
+                    possibleAttributesToGuess.remove(attributeValue.getKey()); // remove this attribute from attributes list
+                } else {
+                    possibleAttributesToGuess.replace(attributeValue.getKey(), attributeValues);
                 }
             }
         }
-        return false;
-    } // end of receiveAnswer()
-
+    }
 
 }
