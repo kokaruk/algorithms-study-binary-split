@@ -13,9 +13,9 @@ import java.util.*;
  */
 class DataLoader {
 
-
-    private static String dataFileName;
     private static DataLoader instance;
+    private String fileName;
+    private List<String> fileLInes;
 
     // map of AttributeName, List of Attribute Values
     private Map<String, List<String>> attributes;
@@ -26,19 +26,30 @@ class DataLoader {
 
 
     // private constructor
-    private DataLoader() throws IOException {
+    private DataLoader(String fileName) throws IOException {
         attributes = new HashMap<>();
         guessCards = new HashMap<>();
+        if(!fileName.equals(this.fileName)){ // reload file if new name
+            this.fileName = fileName;
+            fileLInes = new LinkedList<>();
+            Path path = Paths.get(this.fileName);
+            fileLInes = Files.readAllLines(path);
+        }
         loadData();
     }
 
     //lazy instance getter
     static DataLoader getInstance(String fileName) throws IOException {
-        dataFileName = fileName;
-        instance = new DataLoader();
+        if (instance == null){
+            instance = new DataLoader(fileName);
+        }
+        if(!instance.fileName.equals(fileName)){ // passing new fileName
+            instance = new DataLoader(fileName);
+        }
         return instance;
     }
 
+    // instance getters
     public Map<String, List<String>> getAttributes() {
         return attributes;
     }
@@ -50,12 +61,11 @@ class DataLoader {
     /**
      * load data from file
      */
-    private void loadData() throws IOException {
-        Path path = Paths.get(dataFileName);
+    private void loadData() {
         //make linked list, as it implements the queue interface
         LinkedList<String> lines = new LinkedList<>();
         // add lines from file to queue
-        lines.addAll(Files.readAllLines(path));
+        lines.addAll(fileLInes);
 
         //init attributes from the stack
         initAttributes(lines);
