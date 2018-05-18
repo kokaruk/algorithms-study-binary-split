@@ -7,7 +7,7 @@ import java.util.*;
  * guess() and receiveAnswer() methods
  * and same instance variables, its only logical to have these implementations in an abstract class
  *
- * @author dimz
+ * @author dimz, sittipolpat
  * @since 17/5/18.
  */
 abstract public class AbstractPlayer implements Player {
@@ -63,7 +63,7 @@ abstract public class AbstractPlayer implements Player {
     } // end of receiveAnswer()
 
     void reduceRedundantAttributeValues(String cardName){
-        // check for redundant attribute,value pairs as this card can be the las of attribute value
+        // check for redundant attribute,value pairs as this card can be the last of attribute value
         // but attributes collection to guess still may contain it
         Map<String, String> guessingCardAttributes = new HashMap<>(guessCards.get(cardName));
         guessCards.remove(cardName); // remove card from collection

@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * @author dimz
+ * @author dimz, sittipolpat
  * @since 15/5/18.
  * data reading class
  * reads a config file
