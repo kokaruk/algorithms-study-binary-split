@@ -36,7 +36,7 @@ public class RandomGuessPlayer extends AbstractPlayer implements Player {
         Guess.GuessType guessType = Guess.GuessType.values()[myRandom.nextInt(Guess.GuessType.values().length)];
 
         if (guessType == Guess.GuessType.Attribute) {           //ask about attribute and a value
-            // get array of attribute names from map
+            // get array of attribute names from map (create an empty array instead of pre-sized array to avoid extra-unnecessary null value)
             String[] attributeNames = possibleAttributesToGuess.keySet().toArray(new String[0]);
             //randomly pick attribute to ask e.g. eyeColor, glasses etc.
             String randomAttributeName = attributeNames[myRandom.nextInt(attributeNames.length)];      // random attribute name
