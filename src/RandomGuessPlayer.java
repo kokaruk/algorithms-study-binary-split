@@ -60,6 +60,7 @@ public class RandomGuessPlayer extends AbstractPlayer implements Player {
 
             return new Guess(Guess.GuessType.Person, "", cardName);
         }
+
     } // end of guess()
 
 } // end of class RandomGuessPlayer
